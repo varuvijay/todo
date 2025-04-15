@@ -1,13 +1,23 @@
-import React from "react";
+import React, { useContext } from "react";
 import Navbar from "../pages/Navbar";
 import { Outlet } from "react-router-dom";
+import Login from "../pages/Login";
+import { UserDetails } from "../context/UserDetails";
 
 const RootLayout = () => {
-  return (
-    <div className="mw-100">
-      <Navbar></Navbar>
+  const { userData } = useContext(UserDetails);
+  // console.log(userData);
 
-      <Outlet></Outlet>
+  return (
+    <div className="max-vw-100w-100 pt-3 min-vh-100 ">
+      <div>
+        <Navbar />
+       
+      </div>
+
+      <div>
+        {<Login /> && <Outlet />}
+      </div>
     </div>
   );
 };
