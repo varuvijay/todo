@@ -1,8 +1,13 @@
 import axios from "axios";
-import React from "react";
+import React, { useContext } from "react";
 import { useForm } from "react-hook-form";
+import { UserDetails } from "../context/UserDetails";
+import { useNavigate } from "react-router-dom";
 
 const SignUp = () => {
+    let {   setSignup } = useContext(UserDetails);
+    const navigate = useNavigate();
+  
   const {
     register,
     handleSubmit,
@@ -15,8 +20,9 @@ const SignUp = () => {
         withCredentials: true // important for session-based auth
       });
       console.log(data);
-      
       console.log('✅ Login success:', res.data);
+      setSignup(false)
+      navigate("/")
     } catch (err) {
       console.error('❌ Login failed:', err.response?.data || err.message);
     }

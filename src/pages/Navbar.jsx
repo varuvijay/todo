@@ -1,7 +1,28 @@
-import React from "react";
+import React, { useContext } from "react";
 import { NavLink, Outlet } from "react-router-dom";
+import { UserDetails } from "../context/UserDetails";
 
 const Navbar = () => {
+
+let {userDetails,setUserDetails,setLogin} = useContext(UserDetails);
+
+    const onSubmit = async (data) => {
+        try {
+            const res = await axios.post("http://localhost:80/api/auth/logout", data, {
+                headers: {'X-Session-ID': userDetails.sessionId}
+            });
+            setUserDetails(res.data);
+            setLogin(true);
+            console.log("logged out");
+        } catch (err) {
+            console.log(err);
+            setUserDetails(null);
+
+            setLogin(true);
+        }
+    }
+
+
   let icon = (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -33,12 +54,17 @@ const Navbar = () => {
           </NavLink>
         </div>
         <div className="container-fluid justify-content-end">
-          <NavLink
-            to="/logout"
-            style={{ textDecoration: "none", color: "black" }}
-          >
-            <span className="fs-4"> {icon} logout</span>
-          </NavLink>
+         
+            <button
+              type="button"
+              class="logoutBtn"
+             
+              onClick={() => onSubmit()}
+            >
+             {icon} Logout
+            </button>
+            
+
         </div>
       </nav>
     </div>

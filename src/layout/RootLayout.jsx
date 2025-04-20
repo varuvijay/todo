@@ -3,10 +3,10 @@ import Navbar from "../pages/Navbar";
 import { Outlet } from "react-router-dom";
 import Login from "../pages/Login";
 import { UserDetails } from "../context/UserDetails";
+import SignUp from "../pages/SignUp";
 
 const RootLayout = () => {
-  const { userData } = useContext(UserDetails);
-  // console.log(userData);
+  const { userDetails,signup , setSignup } = useContext(UserDetails);
 
   return (
     <div className="max-vw-100w-100 pt-3 min-vh-100 ">
@@ -14,9 +14,11 @@ const RootLayout = () => {
         <Navbar />
        
       </div>
+      {/* <Outlet /> */}
 
       <div>
-        {<Login /> && <Outlet />}
+      { !userDetails?.status  ? signup ? <SignUp/>  : <Login />  : <Outlet />}
+
       </div>
     </div>
   );

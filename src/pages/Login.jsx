@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import axios from "axios";
 
 const Login = () => {
-  let { setLogin, userDetails, setUserDetails } = useContext(UserDetails);
+  let { setLogin,  setSignup, setUserDetails } = useContext(UserDetails);
   const {
     register,
     handleSubmit,
@@ -18,10 +18,10 @@ const Login = () => {
       const res = await axios.post('http://localhost:80/api/auth/login', data, {
         withCredentials: true
       })
-      
+
       setUserDetails(res.data)
       console.log(res.data);
-      if(res.data.status === "true")
+      if (res.data.status === "true")
         setLogin(true);
 
     } catch {
@@ -30,6 +30,11 @@ const Login = () => {
     }
 
   };
+
+
+  const signUpClicked = () => {
+setSignup(true);
+  }
 
 
   // console.log(watch(data));
@@ -66,7 +71,7 @@ const Login = () => {
             />
           </div>
           <div className="d-flex justify-content-between mt-4">
-            <NavLink to="/signup">Signup</NavLink>
+            <NavLink to="/signup" onClick={signUpClicked}>Signup</NavLink>
             <button
               disabled={isSubmitting}
               type="submit"

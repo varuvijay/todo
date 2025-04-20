@@ -1,10 +1,12 @@
-import React, { useContext } from "react";
-import { useForm } from "react-hook-form";
-import { UserDetails } from "../context/UserDetails";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import React, { useContext } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { UserDetails } from '../context/UserDetails';
+import { useForm } from 'react-hook-form';
+import axios from 'axios';
 
-function Create() {
+const Edit = () => {
+  const location = useLocation();
+  const { value } = location.state || {};
   const navigate = useNavigate();
   const { userDetails } = useContext(UserDetails);
 
@@ -13,43 +15,38 @@ function Create() {
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm({
-    // defaultValues: {
-    //   status: "Pending",
-    // },
+    defaultValues: {
+      name: value?.name || '',
+      description: value?.description || '',
+      status: value?.status || 'Pending',
+    },
   });
 
   const onSubmit = async (data) => {
     try {
-      console.log("Session ID:", userDetails.sessionId);
-      console.log("Form Data:", data);
-
-      const res = await axios.post("http://localhost:80/api/tasks/", data, {
-        headers: { "X-Session-ID": userDetails.sessionId },
+      const id = value?.id;
+      const res = await axios.put(`http://localhost:80/api/tasks/${id}`, data, {
+        headers: { 'X-Session-ID': userDetails?.sessionId },
       });
-
-      console.log("Task Created:", res.data);
-
-      // Redirect to home after successful creation
-      navigate("/");
+      console.log('Task updated:', res.data);
+      navigate('/');
     } catch (err) {
-      console.error("Error creating task:", err);
+      console.error('Error updating task:', err);
     }
   };
 
   return (
     <div
       className="container mh-100 d-flex justify-content-center align-items-center"
-      style={{ height: "90vh" }}
+      style={{ height: '90vh' }}
     >
       <form className="w-50" onSubmit={handleSubmit(onSubmit)}>
         <div className="mb-3">
-          <label htmlFor="name" className="form-label">
-            Title
-          </label>
+          <label htmlFor="name" className="form-label">Title</label>
           <input
             type="text"
             className="form-control"
-            {...register("name", { required: true, minLength: 3 })}
+            {...register('name', { required: true, minLength: 3 })}
           />
           {errors.name && (
             <small className="text-danger">Title is required (min 3 chars)</small>
@@ -57,13 +54,11 @@ function Create() {
         </div>
 
         <div className="mb-3">
-          <label htmlFor="description" className="form-label">
-            Description
-          </label>
+          <label htmlFor="description" className="form-label">Description</label>
           <textarea
             rows="3"
             className="form-control"
-            {...register("description", { required: true })}
+            {...register('description', { required: true })}
           ></textarea>
           {errors.description && (
             <small className="text-danger">Description is required</small>
@@ -71,12 +66,10 @@ function Create() {
         </div>
 
         <div className="mb-3">
-          <label htmlFor="status" className="form-label">
-            City
-          </label>
+          <label htmlFor="status" className="form-label">Status</label>
           <select
             className="form-select form-select-lg"
-            {...register("status", { required: true })}
+            {...register('status', { required: true })}
           >
             <option value="Pending">Pending</option>
             <option value="Completed">Completed</option>
@@ -95,6 +88,6 @@ function Create() {
       </form>
     </div>
   );
-}
+};
 
-export default Create;
+export default Edit;
